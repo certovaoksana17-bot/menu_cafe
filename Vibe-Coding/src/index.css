@@ -1,0 +1,991 @@
+/* ─────────────────────────────────────────────
+   index.css — стили приложения меню
+   Используем обычный CSS без фреймворков,
+   чтобы было понятно каждому новичку.
+   ───────────────────────────────────────────── */
+
+/* Подключаем Google Fonts — должен быть первым в файле */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ── Сброс и базовые настройки ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Цветовая палитра — меняйте здесь, изменится везде */
+  --color-bg:        #f5f5f5;
+  --color-surface:   #ffffff;
+  --color-accent:    #ff3d00;      /* оранжево-красный — типичный фастфуд */
+  --color-accent-hover: #e03500;
+  --color-text:      #1a1a1a;
+  --color-muted:     #6b6b6b;
+  --color-border:    #e8e8e8;
+
+  /* Отступы */
+  --gap: 16px;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ── Шапка ── */
+.header {
+  position: sticky;          /* прилипает к верху при скролле */
+  top: 0;
+  z-index: 100;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+.header__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px var(--gap);
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;           /* логотип не сжимается */
+}
+
+.header__logo-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.header__logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--color-text);
+}
+
+/* ── Строка поиска ── */
+.search-input {
+  flex: 1;                   /* растягивается на всю оставшуюся ширину */
+  max-width: 340px;
+  padding: 9px 14px;
+  font-size: 15px;
+  font-family: inherit;
+  border: 1.5px solid var(--color-border);
+  border-radius: 50px;       /* pill-форма */
+  background: var(--color-bg);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color .15s;
+}
+
+.search-input:focus {
+  border-color: var(--color-accent);
+}
+
+/* ── Основная область ── */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px var(--gap) 48px;
+}
+
+/* ── Полоса категорий ── */
+.categories {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.category-tab {
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  border: 1.5px solid var(--color-border);
+  border-radius: 50px;
+  background: var(--color-surface);
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+  white-space: nowrap;
+}
+
+.category-tab:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* Активная (выбранная) категория */
+.category-tab--active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+.category-tab--active:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  color: #fff;
+}
+
+/* ── Сетка карточек блюд ── */
+/* auto-fill = столько колонок, сколько влезет при минимуме 240px */
+.dishes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--gap);
+}
+
+/* ── Карточка блюда ── */
+.dish-card {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  overflow: hidden;          /* картинка не вылезает за скруглённые углы */
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow .2s, transform .2s;
+}
+
+.dish-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,.10);
+  transform: translateY(-2px);
+}
+
+/* Обёртка фото — задаёт фиксированное соотношение сторон */
+.dish-card__image-wrap {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #eee;          /* заглушка пока грузится картинка */
+}
+
+.dish-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;         /* картинка заполняет область без деформации */
+  transition: transform .3s;
+}
+
+.dish-card:hover .dish-card__image {
+  transform: scale(1.04);    /* лёгкий зум при наведении */
+}
+
+/* Текстовая часть карточки */
+.dish-card__body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;                   /* занимает оставшееся место */
+}
+
+.dish-card__name {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+
+.dish-card__desc {
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.45;
+  flex: 1;
+}
+
+/* Нижняя строка карточки: цена + кнопка */
+.dish-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.dish-card__price {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.3px;
+}
+
+/* ── Кнопка «+ Добавить» ── */
+.btn-add {
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+  color: #fff;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+}
+
+.btn-add:hover {
+  background: var(--color-accent-hover);
+}
+
+.btn-add:active {
+  transform: scale(0.96);
+}
+
+/* ── Кнопка корзины в шапке ── */
+.cart-toggle {
+  position: relative;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-bg);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s;
+}
+
+.cart-toggle:hover {
+  background: var(--color-border);
+}
+
+/* Красный бейдж с числом товаров */
+.cart-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 50px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* ── Счётчик количества на карточке ── */
+.card-qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Общие стили для кнопок +/− (используются и в карточке, и в корзине) */
+.qty-btn {
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .15s, background .15s;
+  flex-shrink: 0;
+}
+
+.qty-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.qty-value {
+  min-width: 22px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* ── Затемнённый фон (overlay) под корзиной ── */
+.cart-overlay {
+  position: fixed;
+  inset: 0;                  /* растягиваем на весь экран */
+  background: rgba(0,0,0,.4);
+  z-index: 200;
+  animation: fadeIn .2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Боковая панель корзины ── */
+.cart-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 420px;
+  max-width: 100vw;
+  background: var(--color-surface);
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 32px rgba(0,0,0,.15);
+  animation: slideIn .25s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+/* Заголовок панели */
+.cart-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.cart-panel__title {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.cart-panel__close {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-bg);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s;
+}
+
+.cart-panel__close:hover {
+  background: var(--color-border);
+}
+
+/* ── Список позиций в корзине ── */
+.cart-list {
+  list-style: none;
+  flex: 1;
+  overflow-y: auto;          /* прокручивается если позиций много */
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Одна позиция в корзине */
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cart-item__photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #eee;
+}
+
+.cart-item__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;              /* разрешаем тексту сжиматься */
+}
+
+.cart-item__name {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cart-item__unit-price {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.cart-item__controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* Сумма за позицию (цена × кол-во) */
+.cart-item__subtotal {
+  font-size: 14px;
+  font-weight: 700;
+  min-width: 56px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Кнопка удаления позиции */
+.cart-item__remove {
+  border: none;
+  background: none;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: .5;
+  transition: opacity .15s;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.cart-item__remove:hover {
+  opacity: 1;
+}
+
+/* ── Нижняя часть корзины: итого + кнопка заказа ── */
+.cart-footer {
+  padding: 16px 20px 20px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.cart-footer__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.cart-footer__sum {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+/* ── Переключатель Самовывоз / Доставка ── */
+.delivery-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;  /* две равные колонки */
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.delivery-tab {
+  padding: 9px 0;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+}
+
+.delivery-tab:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.delivery-tab--active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+/* ── Блок с информацией о доставке / самовывозе ── */
+.delivery-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+}
+
+/* Строка «Время доставки: 30–45 мин» */
+.delivery-time-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.delivery-time-label {
+  color: var(--color-muted);
+}
+
+.delivery-time-value {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* ── Обёртка поля адреса (input + иконка состояния) ── */
+.address-field {
+  position: relative;
+}
+
+/* Поле ввода адреса */
+.delivery-address-input {
+  width: 100%;
+  padding: 9px 36px 9px 12px; /* правый отступ под иконку состояния */
+  font-size: 14px;
+  font-family: inherit;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color .15s, background .15s;
+}
+
+.delivery-address-input:focus {
+  border-color: var(--color-accent);
+}
+
+/* Состояние: ошибка */
+.delivery-address-input--error {
+  border-color: #e53935;
+  background: #fff8f7;
+}
+.delivery-address-input--error:focus {
+  border-color: #e53935;
+}
+
+/* Состояние: успешно */
+.delivery-address-input--valid {
+  border-color: #22a45d;
+  background: #f4fbf7;
+}
+.delivery-address-input--valid:focus {
+  border-color: #22a45d;
+}
+
+/* Иконка ✓ / ! справа внутри поля */
+.address-field__icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  font-weight: 800;
+  pointer-events: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.address-field__icon--ok {
+  background: #22a45d;
+  color: #fff;
+  font-size: 11px;
+}
+
+.address-field__icon--err {
+  background: #e53935;
+  color: #fff;
+  font-size: 13px;
+}
+
+/* Текст ошибки под полем */
+.address-error {
+  font-size: 12px;
+  color: #e53935;
+  font-weight: 500;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.address-error::before {
+  content: "✕";
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* Подсказка-пример под полем (серая, видна до ошибок) */
+.address-hint {
+  font-size: 12px;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
+/* Подсказка про стоимость/бесплатность доставки */
+.delivery-fee-hint {
+  font-size: 12px;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
+.delivery-fee-hint__gap {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Зелёная надпись «Бесплатная доставка» */
+.delivery-fee-free {
+  font-size: 13px;
+  font-weight: 600;
+  color: #22a45d;
+}
+
+/* ── Строки итога (блюда + доставка + итого) ── */
+.cart-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.cart-totals__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+/* Зелёный текст «Бесплатно» в строке доставки */
+.delivery-free-label {
+  color: #22a45d;
+  font-weight: 600;
+}
+
+.btn-order {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: #fff;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+}
+
+.btn-order:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
+.btn-order:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Кнопка заблокирована — когда адрес не введён */
+.btn-order:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* ── Пустая корзина ── */
+.cart-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--color-muted);
+  font-size: 15px;
+  text-align: center;
+}
+
+.cart-empty__icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+/* ── Крайний случай №1: заглушка сломанного фото ── */
+/* Показывается вместо <img> когда URL недоступен */
+.img-fallback {
+  width: 100%;
+  height: 100%;
+  background: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--color-muted);
+}
+
+.img-fallback__icon {
+  font-size: 28px;
+  opacity: .5;
+}
+
+.img-fallback__text {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .3px;
+}
+
+/* ── Крайний случай №2: заблокированная кнопка «+» при MAX_QTY ── */
+.qty-btn:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+  border-color: var(--color-border);
+  color: var(--color-muted);
+}
+
+/* ── Заглушка «ничего не найдено» ── */
+.empty-state {
+  text-align: center;
+  padding: 64px 0;
+  color: var(--color-muted);
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Тёмный фон за модальным окном ── */
+/* position: fixed — прилипает к экрану, не прокручивается */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 300;
+  animation: fadeIn .2s ease;
+}
+
+/* ── Само модальное окно ── */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /* сдвигаем ровно на половину своего размера — получаем центр */
+  transform: translate(-50%, -50%);
+  z-index: 301;
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  width: 480px;
+  max-width: calc(100vw - 32px); /* на узких экранах не вылезет за край */
+  max-height: 90vh;              /* не выше 90% высоты экрана */
+  overflow-y: auto;              /* если не помещается — прокручивается */
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+  animation: modalIn .22s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translate(-50%, -48%); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+/* Кнопка ✕ в правом верхнем углу */
+.modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  transition: background .15s;
+}
+
+.modal__close:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* Фото вверху окна */
+.modal__image-wrap {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #eee;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.modal__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Текстовая часть */
+.modal__body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal__name {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+.modal__desc {
+  font-size: 14px;
+  color: var(--color-muted);
+  line-height: 1.5;
+  margin-top: -6px;
+}
+
+/* Нижняя строка: цена + кнопка добавления */
+.modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 6px;
+  border-top: 1px solid var(--color-border);
+  margin-top: 4px;
+}
+
+/* Сетка КБЖУ: 4 ячейки в ряд */
+.nutrition-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.nutrition-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: var(--color-surface);
+  border-radius: 6px;
+  padding: 6px 4px;
+}
+
+.nutrition-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.nutrition-label {
+  font-size: 10px;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+
+.nutrition-weight {
+  font-size: 11px;
+  color: var(--color-muted);
+  text-align: right;
+  margin-top: -4px;
+}
+
+/* Секция «Состав» / «Аллергены» */
+.nutrition-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nutrition-section__title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--color-muted);
+}
+
+.nutrition-ingredients {
+  font-size: 12px;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+/* Бейджи аллергенов */
+.allergens-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.allergen-badge {
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 50px;
+  background: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffcc80;
+}
+
+/* ── Адаптив для мобильных ── */
+@media (max-width: 600px) {
+  .header__logo-text {
+    font-size: 18px;
+  }
+
+  .search-input {
+    max-width: none;         /* на маленьком экране занимает всю ширину */
+  }
+
+  .dishes-grid {
+    grid-template-columns: 1fr 1fr;  /* 2 колонки на телефоне */
+    gap: 12px;
+  }
+
+  .dish-card__name {
+    font-size: 14px;
+  }
+
+  .dish-card__desc {
+    font-size: 12px;
+  }
+
+  .dish-card__price {
+    font-size: 15px;
+  }
+
+  .btn-add {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}

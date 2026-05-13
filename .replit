@@ -1,0 +1,14 @@
+modules = ["nodejs-24"]
+
+run = "PORT=3000 BASE_PATH=/ npx vite --host 0.0.0.0"
+
+[[ports]]
+localPort = 3000
+externalPort = 3000
+
+[[ports]]
+localPort = 25924
+externalPort = 80
+
+[agent]
+expertMode = true
